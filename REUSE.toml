@@ -1,0 +1,13 @@
+version = 1
+
+[[annotations]]
+path = "**"
+precedence = "aggregate"
+SPDX-FileCopyrightText = "Rool Productions"
+SPDX-License-Identifier = "EUPL-1.2"
+
+[[annotations]]
+path = "**.md"
+precedence = "aggregate"
+SPDX-FileCopyrightText = "Rool Productions"
+SPDX-License-Identifier = "CC0-1.0"
