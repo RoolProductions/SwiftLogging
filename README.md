@@ -18,7 +18,13 @@ The level defaults to `.off`, so no output is produced until explicitly configur
 
 ## Usage
 
-Each log function produces a line prefixed with an icon, followed by the message and call-site location (function name, file, and line number):
+Each log function produces a line prefixed with an icon and the message:
+
+```
+💤 My message
+```
+
+Pass `showLocation: true` to append the call-site location (function name, file, and line number):
 
 ```
 💤 My message — myFunction() (MyView.swift:42)
@@ -27,11 +33,12 @@ Each log function produces a line prefixed with an icon, followed by the message
 ```swift
 import SwiftLogging
 
-logVerbose("This is awesome!") // 💤
-logDebug("This is awesome!")   // 🐞
-logInfo("This is awesome!")    // 📋
-logWarning("This is awesome!") // ❗️
-logError("This is awesome!")   // 🔥
+logVerbose("This is awesome!")                    // 💤
+logDebug("This is awesome!")                      // 🐞
+logInfo("This is awesome!")                       // 📋
+logWarning("This is awesome!")                    // ❗️
+logError("This is awesome!")                      // 🔥
+logInfo("This is awesome!", showLocation: true)   // 📋 with location
 ```
 
 The log functions also accept additional values that are printed inline with the message:
@@ -41,15 +48,15 @@ import SwiftLogging
 
 let value = ["foo"]
 logDebug("The value is", value)
-// 🐞 The value is: ["foo"] — ...
+// 🐞 The value is: ["foo"]
 
 let arrayValues: [String] = ["foo", "bar"]
 logDebug("The values are", arrayValues)
-// 🐞 The values are: ["foo", "bar"] — ...
+// 🐞 The values are: ["foo", "bar"]
 
 let dictValues = ["foo": "bar", "bar": "baz"]
 logDebug("The values are", dictValues)
-// 🐞 The values are: ["bar": "baz", "foo": "bar"] — ...
+// 🐞 The values are: ["bar": "baz", "foo": "bar"]
 ```
 
 ## SwiftUI View Modifier
