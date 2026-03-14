@@ -14,16 +14,20 @@ public extension View {
 	///   - file: the source file (auto-filled by the compiler)
 	///   - line: the line number (auto-filled by the compiler)
 	///   - function: the enclosing function (auto-filled by the compiler)
+	///   - showLocation: whether to include the file/line/function in the output;
+	///     defaults to `false`
 	func logVerbose(
 		_ message: String,
 		_ values: Any...,
 		file: String = #file,
 		line: Int = #line,
-		function: String = #function
+		function: String = #function,
+		showLocation: Bool = false
 	) -> some View {
 		modifier(LogModifier(
 			message, .verbose, values,
-			file: file, line: line, function: function
+			file: file, line: line, function: function,
+			showLocation: showLocation
 		))
 	}
 	
@@ -34,16 +38,20 @@ public extension View {
 	///   - file: the source file (auto-filled by the compiler)
 	///   - line: the line number (auto-filled by the compiler)
 	///   - function: the enclosing function (auto-filled by the compiler)
+	///   - showLocation: whether to include the file/line/function in the output;
+	///     defaults to `false`
 	func logDebug(
 		_ message: String,
 		_ values: Any...,
 		file: String = #file,
 		line: Int = #line,
-		function: String = #function
+		function: String = #function,
+		showLocation: Bool = false
 	) -> some View {
 		modifier(LogModifier(
 			message, .debug, values,
-			file: file, line: line, function: function
+			file: file, line: line, function: function,
+			showLocation: showLocation
 		))
 	}
 	
@@ -54,16 +62,20 @@ public extension View {
 	///   - file: the source file (auto-filled by the compiler)
 	///   - line: the line number (auto-filled by the compiler)
 	///   - function: the enclosing function (auto-filled by the compiler)
+	///   - showLocation: whether to include the file/line/function in the output;
+	///     defaults to `false`
 	func logInfo(
 		_ message: String,
 		_ values: Any...,
 		file: String = #file,
 		line: Int = #line,
-		function: String = #function
+		function: String = #function,
+		showLocation: Bool = false
 	) -> some View {
 		modifier(LogModifier(
 			message, .info, values,
-			file: file, line: line, function: function
+			file: file, line: line, function: function,
+			showLocation: showLocation
 		))
 	}
 	
@@ -74,16 +86,20 @@ public extension View {
 	///   - file: the source file (auto-filled by the compiler)
 	///   - line: the line number (auto-filled by the compiler)
 	///   - function: the enclosing function (auto-filled by the compiler)
+	///   - showLocation: whether to include the file/line/function in the output;
+	///     defaults to `false`
 	func logWarning(
 		_ message: String,
 		_ values: Any...,
 		file: String = #file,
 		line: Int = #line,
-		function: String = #function
+		function: String = #function,
+		showLocation: Bool = false
 	) -> some View {
 		modifier(LogModifier(
 			message, .warning, values,
-			file: file, line: line, function: function
+			file: file, line: line, function: function,
+			showLocation: showLocation
 		))
 	}
 	
@@ -94,16 +110,20 @@ public extension View {
 	///   - file: the source file (auto-filled by the compiler)
 	///   - line: the line number (auto-filled by the compiler)
 	///   - function: the enclosing function (auto-filled by the compiler)
+	///   - showLocation: whether to include the file/line/function in the output;
+	///     defaults to `false`
 	func logError(
 		_ message: String,
 		_ values: Any...,
 		file: String = #file,
 		line: Int = #line,
-		function: String = #function
+		function: String = #function,
+		showLocation: Bool = false
 	) -> some View {
 		modifier(LogModifier(
 			message, .error, values,
-			file: file, line: line, function: function
+			file: file, line: line, function: function,
+			showLocation: showLocation
 		))
 	}
 }
@@ -117,6 +137,7 @@ public struct LogModifier: ViewModifier {
 	private let file: String
 	private let line: Int
 	private let function: String
+	private let showLocation: Bool
 	
 	/// Creates a log modifier that will log at the given level when the
 	/// view appears.
@@ -127,13 +148,16 @@ public struct LogModifier: ViewModifier {
 	///   - file: the source file (auto-filled by the compiler)
 	///   - line: the line number (auto-filled by the compiler)
 	///   - function: the enclosing function (auto-filled by the compiler)
+	///   - showLocation: whether to include the file/line/function in the output;
+	///     defaults to `false`
 	init(
 		_ message: String,
 		_ logLevel: LoggingLevel,
 		_ values: [Any] = [],
 		file: String = #file,
 		line: Int = #line,
-		function: String = #function
+		function: String = #function,
+		showLocation: Bool = false
 	) {
 		self.message = message
 		self.logLevel = logLevel
@@ -141,6 +165,7 @@ public struct LogModifier: ViewModifier {
 		self.file = file
 		self.line = line
 		self.function = function
+		self.showLocation = showLocation
 	}
 	
 	public func body(content: Self.Content) -> some View {
@@ -149,19 +174,24 @@ public struct LogModifier: ViewModifier {
 				switch logLevel {
 					case .verbose:
 						logVerbose(message, values,
-								   file: file, line: line, function: function)
+								   file: file, line: line, function: function,
+								   showLocation: showLocation)
 					case .debug:
 						logDebug(message, values,
-								 file: file, line: line, function: function)
+								 file: file, line: line, function: function,
+								 showLocation: showLocation)
 					case .info:
 						logInfo(message, values,
-								file: file, line: line, function: function)
+								file: file, line: line, function: function,
+								showLocation: showLocation)
 					case .warning:
 						logWarning(message, values,
-								   file: file, line: line, function: function)
+								   file: file, line: line, function: function,
+								   showLocation: showLocation)
 					case .error:
 						logError(message, values,
-								 file: file, line: line, function: function)
+								 file: file, line: line, function: function,
+								 showLocation: showLocation)
 					case .off:
 						break
 				}

@@ -3,6 +3,8 @@
  *  SPDX-License-Identifier: EUPL-1.2
  */
 
+import Foundation
+
 // MARK: - SwiftLogger
 
 /// Namespace for global SwiftLogging configuration.
@@ -43,7 +45,8 @@ public enum SwiftLogger {
 /// Logs a message at the verbose level.
 ///
 /// Only produces output when `SwiftLogger.level` is `.verbose`.
-/// Output is prefixed with 💤 and includes the call-site location.
+/// Output is prefixed with 💤. Pass `showLocation: true` to append the
+/// call-site location (`— function (file:line)`) to the output.
 ///
 /// - Parameters:
 ///   - message: the message to log
@@ -51,20 +54,24 @@ public enum SwiftLogger {
 ///   - file: the source file (auto-filled by the compiler)
 ///   - line: the line number (auto-filled by the compiler)
 ///   - function: the enclosing function (auto-filled by the compiler)
+///   - showLocation: whether to include the file/line/function in the output;
+///     defaults to `false`
 public func logVerbose(
 	_ message: String,
 	_ values: Any...,
 	file: String = #file,
 	line: Int = #line,
-	function: String = #function
+	function: String = #function,
+	showLocation: Bool = false
 ) {
-	logVerbose(message, values, file: file, line: line, function: function)
+	logVerbose(message, values, file: file, line: line, function: function, showLocation: showLocation)
 }
 
 /// Logs a message at the debug level.
 ///
 /// Only produces output when `SwiftLogger.level` is `.verbose` or `.debug`.
-/// Output is prefixed with 🐞 and includes the call-site location.
+/// Output is prefixed with 🐞. Pass `showLocation: true` to append the
+/// call-site location (`— function (file:line)`) to the output.
 ///
 /// - Parameters:
 ///   - message: the message to log
@@ -72,20 +79,24 @@ public func logVerbose(
 ///   - file: the source file (auto-filled by the compiler)
 ///   - line: the line number (auto-filled by the compiler)
 ///   - function: the enclosing function (auto-filled by the compiler)
+///   - showLocation: whether to include the file/line/function in the output;
+///     defaults to `false`
 public func logDebug(
 	_ message: String,
 	_ values: Any...,
 	file: String = #file,
 	line: Int = #line,
-	function: String = #function
+	function: String = #function,
+	showLocation: Bool = false
 ) {
-	logDebug(message, values, file: file, line: line, function: function)
+	logDebug(message, values, file: file, line: line, function: function, showLocation: showLocation)
 }
 
 /// Logs a message at the info level.
 ///
 /// Only produces output when `SwiftLogger.level` is `.verbose`, `.debug`,
-/// or `.info`. Output is prefixed with 📋 and includes the call-site location.
+/// or `.info`. Output is prefixed with 📋. Pass `showLocation: true` to append
+/// the call-site location (`— function (file:line)`) to the output.
 ///
 /// - Parameters:
 ///   - message: the message to log
@@ -93,21 +104,24 @@ public func logDebug(
 ///   - file: the source file (auto-filled by the compiler)
 ///   - line: the line number (auto-filled by the compiler)
 ///   - function: the enclosing function (auto-filled by the compiler)
+///   - showLocation: whether to include the file/line/function in the output;
+///     defaults to `false`
 public func logInfo(
 	_ message: String,
 	_ values: Any...,
 	file: String = #file,
 	line: Int = #line,
-	function: String = #function
+	function: String = #function,
+	showLocation: Bool = false
 ) {
-	logInfo(message, values, file: file, line: line, function: function)
+	logInfo(message, values, file: file, line: line, function: function, showLocation: showLocation)
 }
 
 /// Logs a message at the warning level.
 ///
 /// Only produces output when `SwiftLogger.level` is `.verbose`, `.debug`,
-/// `.info`, or `.warning`. Output is prefixed with ❗️ and includes the
-/// call-site location.
+/// `.info`, or `.warning`. Output is prefixed with ❗️. Pass `showLocation: true`
+/// to append the call-site location (`— function (file:line)`) to the output.
 ///
 /// - Parameters:
 ///   - message: the message to log
@@ -115,20 +129,24 @@ public func logInfo(
 ///   - file: the source file (auto-filled by the compiler)
 ///   - line: the line number (auto-filled by the compiler)
 ///   - function: the enclosing function (auto-filled by the compiler)
+///   - showLocation: whether to include the file/line/function in the output;
+///     defaults to `false`
 public func logWarning(
 	_ message: String,
 	_ values: Any...,
 	file: String = #file,
 	line: Int = #line,
-	function: String = #function
+	function: String = #function,
+	showLocation: Bool = false
 ) {
-	logWarning(message, values, file: file, line: line, function: function)
+	logWarning(message, values, file: file, line: line, function: function, showLocation: showLocation)
 }
 
 /// Logs a message at the error level.
 ///
 /// Produces output at all `SwiftLogger.level` settings except `.off`.
-/// Output is prefixed with 🔥 and includes the call-site location.
+/// Output is prefixed with 🔥. Pass `showLocation: true` to append the
+/// call-site location (`— function (file:line)`) to the output.
 ///
 /// - Parameters:
 ///   - message: the message to log
@@ -136,14 +154,17 @@ public func logWarning(
 ///   - file: the source file (auto-filled by the compiler)
 ///   - line: the line number (auto-filled by the compiler)
 ///   - function: the enclosing function (auto-filled by the compiler)
+///   - showLocation: whether to include the file/line/function in the output;
+///     defaults to `false`
 public func logError(
 	_ message: String,
 	_ values: Any...,
 	file: String = #file,
 	line: Int = #line,
-	function: String = #function
+	function: String = #function,
+	showLocation: Bool = false
 ) {
-	logError(message, values, file: file, line: line, function: function)
+	logError(message, values, file: file, line: line, function: function, showLocation: showLocation)
 }
 
 // MARK: - Internal overloads accepting [Any] to avoid variadic re-wrapping
@@ -156,47 +177,52 @@ public func logError(
 
 func logVerbose(
 	_ message: String, _ values: [Any],
-	file: String, line: Int, function: String
+	file: String, line: Int, function: String,
+	showLocation: Bool
 ) {
 	guard SwiftLogger.level >= .verbose else { return }
 	log(icon: "💤", message: message, values,
-		file: file, line: line, function: function)
+		file: file, line: line, function: function, showLocation: showLocation)
 }
 
 func logDebug(
 	_ message: String, _ values: [Any],
-	file: String, line: Int, function: String
+	file: String, line: Int, function: String,
+	showLocation: Bool
 ) {
 	guard SwiftLogger.level >= .debug else { return }
 	log(icon: "🐞", message: message, values,
-		file: file, line: line, function: function)
+		file: file, line: line, function: function, showLocation: showLocation)
 }
 
 func logInfo(
 	_ message: String, _ values: [Any],
-	file: String, line: Int, function: String
+	file: String, line: Int, function: String,
+	showLocation: Bool
 ) {
 	guard SwiftLogger.level >= .info else { return }
 	log(icon: "📋", message: message, values,
-		file: file, line: line, function: function)
+		file: file, line: line, function: function, showLocation: showLocation)
 }
 
 func logWarning(
 	_ message: String, _ values: [Any],
-	file: String, line: Int, function: String
+	file: String, line: Int, function: String,
+	showLocation: Bool
 ) {
 	guard SwiftLogger.level >= .warning else { return }
 	log(icon: "❗️", message: message, values,
-		file: file, line: line, function: function)
+		file: file, line: line, function: function, showLocation: showLocation)
 }
 
 func logError(
 	_ message: String, _ values: [Any],
-	file: String, line: Int, function: String
+	file: String, line: Int, function: String,
+	showLocation: Bool
 ) {
 	guard SwiftLogger.level >= .error else { return }
 	log(icon: "🔥", message: message, values,
-		file: file, line: line, function: function)
+		file: file, line: line, function: function, showLocation: showLocation)
 }
 
 // MARK: - Output
@@ -219,17 +245,23 @@ private func log(
 	_ values: [Any],
 	file: String,
 	line: Int,
-	function: String
+	function: String,
+	showLocation: Bool
 ) {
-	let filename = file.split(separator: "/").last.map(String.init) ?? file
-	let context = "— \(function) (\(filename):\(line))"
-	if values.count == 1, let dict = values[0] as? [String: Any] {
-		print("\(icon) \(message): \(dict) \(context)")
-	} else if values.count == 1 {
-		print("\(icon) \(message): \(values[0]) \(context)")
-	} else if !values.isEmpty {
-		print("\(icon) \(message): \(values) \(context)")
+	let context: String
+	if showLocation {
+		let filename = URL(fileURLWithPath: file).lastPathComponent
+		context = " — \(function) (\(filename):\(line))"
 	} else {
-		print("\(icon) \(message) \(context)")
+		context = ""
+	}
+	if values.count == 1, let dict = values[0] as? [String: Any] {
+		print("\(icon) \(message): \(dict)\(context)")
+	} else if values.count == 1 {
+		print("\(icon) \(message): \(values[0])\(context)")
+	} else if !values.isEmpty {
+		print("\(icon) \(message): \(values)\(context)")
+	} else {
+		print("\(icon) \(message)\(context)")
 	}
 }

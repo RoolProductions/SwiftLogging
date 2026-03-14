@@ -166,8 +166,8 @@ struct GlobalStateTests {
 			SwiftLogger.level = .verbose
 			defer { SwiftLogger.level = .off }
 			let output = captureStdout { logVerbose("hello") }
-			// Icon and message appear before the context separator, with no colon between them
-			#expect(output.contains("💤 hello —"))
+			#expect(output.contains("💤 hello"))
+			#expect(!output.contains("—"))
 		}
 		
 		@Test("single value is printed inline after message")
@@ -209,14 +209,32 @@ struct GlobalStateTests {
 			#expect(captureStdout { logError("m") }.hasPrefix("🔥"))
 		}
 		
-		@Test("output includes call-site file, line, and function")
+		@Test("output includes call-site file, line, and function when showLocation is true")
 		func callSiteContext() {
 			SwiftLogger.level = .verbose
 			defer { SwiftLogger.level = .off }
-			let output = captureStdout { logVerbose("ctx") }
+			let output = captureStdout { logVerbose("ctx", showLocation: true) }
 			#expect(output.contains("SwiftLoggingTests.swift"))
 			#expect(output.contains("callSiteContext()"))
 			#expect(output.contains("—"))
+		}
+
+		@Test("output omits call-site location when showLocation is false")
+		func callSiteContextHidden() {
+			SwiftLogger.level = .verbose
+			defer { SwiftLogger.level = .off }
+			let output = captureStdout { logVerbose("ctx", showLocation: false) }
+			#expect(!output.contains("SwiftLoggingTests.swift"))
+			#expect(!output.contains("callSiteContextHidden()"))
+			#expect(!output.contains("—"))
+		}
+
+		@Test("showLocation defaults to false")
+		func showLocationDefaultIsFalse() {
+			SwiftLogger.level = .verbose
+			defer { SwiftLogger.level = .off }
+			let output = captureStdout { logVerbose("ctx") }
+			#expect(!output.contains("—"))
 		}
 	} // LogOutputFormattingTests
 
@@ -236,6 +254,26 @@ struct GlobalStateTests {
 			#expect(output.contains("msg"))
 			#expect(output.contains("42"))
 			#expect(output.contains("extra"))
+		}
+
+		@Test("modifier omits location by default")
+		func modifierShowLocationDefaultIsFalse() throws {
+			SwiftLogger.level = .verbose
+			defer { SwiftLogger.level = .off }
+			let sut = Text("Loc").modifier(LogModifier("loc test", .verbose))
+			let content = try sut.inspect().text().modifier(LogModifier.self).viewModifierContent()
+			let output = captureStdout { try? content.callOnAppear() }
+			#expect(!output.contains("—"))
+		}
+
+		@Test("modifier includes location when showLocation is true")
+		func modifierShowLocationTrue() throws {
+			SwiftLogger.level = .verbose
+			defer { SwiftLogger.level = .off }
+			let sut = Text("Loc").modifier(LogModifier("loc test", .verbose, showLocation: true))
+			let content = try sut.inspect().text().modifier(LogModifier.self).viewModifierContent()
+			let output = captureStdout { try? content.callOnAppear() }
+			#expect(output.contains("—"))
 		}
 	} // LogModifierOutputTests
 } // GlobalStateTests
